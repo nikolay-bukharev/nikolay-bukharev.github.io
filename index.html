@@ -1,8 +1,67 @@
-<html><body>
-<p>черновичок :)</p>
-<p>Январь 2016.</p>
-<p> 23го вечером я решил поиграться со списком задач другими методами - потому что испробованное (включая micromiles) как-то не прижилось. попробовал пойти от принципа KISS (для "неместных" - keep it simple, stupid) и начал со списка задач с коротким горизонтом, не заморачиваясь с размером кусочков. Писать начал на сложенном пополам А4, я уже очень давно использую такой формат для заметок, мыслешторма и порисовать-потупить на митинге. Основная мысль - не дать себе свалить от выполнения текущей задачи (помечена точкой), одновременно не теряя идеи, пришедшие во время её выполнения. Заметил корявость в коде, заслуживающую отдельного фикса? Записал. Посмотрел в окно? Добавил задачку "купить омывайки". И так далее. После стремительного заполнения первого листка с двух сторон (42 задачи + 1 закладка в сериале) сделал лёгкий тюнинг техники и стал писать новые задачи снизу вверх - таким образом следующая задача выбирается естественным образом из топа. </p>
-<p>План на следующие пару сотен: отработать практику, внедрить технологию дропа того, что прокрастинируется и завести long runs (или epics, кому как больше нравится) - когда записанное в список оказалось не задачкой на полчаса/день, а идеей, требующей выполнения многих шагов, растянутых во времени </p>
-<p>И чуть-чуть цифр. чуть-чуть - так как думаю подбивать статистику по каждой сотне. Сейчас в списке 73 задачи. невычеркнутого примерно одна пятая. может быть, подсчитаю ещё соотношение код/остальное, работа/внеработа :)</p>
-<p>А, чуть не забыл! Сквозная нумерация позволяет видеть какая задачка слишком долго живёт и в целом позволяет играть со статистикой без нудного подсчёта строчек.</p>
-</body></html>
+---
+layout: default
+---
+{% if site.baseurl != "/" and site.baseurl != "" %}
+{% assign baseurl = site.baseurl %}
+{% else %}
+{% assign baseurl = "" %}
+{% endif %}
+
+{% if site.paginate == null %}
+{% assign container = site.posts %}
+{% else %}
+{% assign container = paginator.posts %}
+{% endif %}
+
+{% for post in container %}
+	<article class="hentry">
+		<header class="entry-header">
+			<h1 class="entry-title"><a href="{{ baseurl }}{{ post.url }}" title="{{ post.title }}" rel="bookmark">{{ post.title }}</a></h1>
+
+			<div class="entry-meta">
+				<time class="entry-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_to_string }}</time>
+			</div>
+		</header>
+
+		<div class="entry-content">
+			<p>
+				{{ post.excerpt | strip_html }} <a href="{{post.url}}">Continue &rarr;</a>
+			</p>
+		</div>
+
+		<footer class="entry-meta">
+			{% if post.categories != empty %}
+				<span class="cat-links">
+					Posted in {{ post.categories | array_to_sentence_string}}
+				</span>
+			{% endif %}
+			{% if post.categories != empty and post.tags != empty %}
+				<span class="sep"> | </span>
+			{% endif %}
+			{% if post.tags != empty %}
+				<span class="tags-links">
+					{{ post.tags | array_to_sentence_string }}
+				</span>
+			{% endif %}
+		</footer>
+	</article>
+
+{% endfor %}
+
+<nav role="navigation" class="site-navigation paging-navigation">
+	{% if paginator.next_page %}
+		<div class="nav-previous">
+			<a href="{{ baseurl }}/page{{ paginator.next_page }}">← Older posts</a>
+		</div>
+	{% endif %}
+
+	{% if paginator.previous_page %}
+		<div class="nav-next">
+			{% if paginator.previous_page == 1 %}
+				<a href="{{ baseurl }}/">Newer posts →</a>
+			{% else %}
+				<a href="{{ baseurl }}/page{{ paginator.previous_page }}">Newer posts →</a>
+			{% endif %}
+		</div>
+	{% endif %}
+</nav>
